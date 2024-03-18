@@ -1,15 +1,14 @@
-#include <Arduino.h> 
-#include <ArduinoJson.h>  
+#include <Arduino.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 #include <OneWire.h>
-#include <HTTPClient.h> 
+#include <DallasTemperature.h>
 #include "env.h"
-#include <DallasTemperature.h> 
 
-
-OneWire oneWire(ONE_WIRE_BUS); 
-
-
+OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
+
 
 //LiquidCrystal My_LCD(22,23,5,18,19,21);
 
@@ -17,7 +16,7 @@ unsigned long lastTime = 0;
 unsigned long Timerdelay =2000;
 // put function declarations here:
 
-void getLight(void){
+void getLight(){
   
   HTTPClient http;  
   String serverPath_light = endpoint + "light";
@@ -48,11 +47,14 @@ void getLight(void){
   }
    else {
   digitalWrite(LED_PIN, light); 
-    }
-  } 
+   }
+  else{
+    Serial.print("Error code: ");
+    Serial.println(httpResponseCode);
+  }
   http.end();
-} 
-
+}
+}
 void patchTemp(float temperature){
   HTTPClient http;  
   String serverPath_temp = endpoint + "temp";
@@ -100,7 +102,8 @@ void loop() {
   delay(1000);  
   sensors.requestTemperatures();    
   float x = sensors.getTempCByIndex(); 
-  patchTemp(x);
+  patchTemp(x); 
+  getLight();
   Serial.println(x);  
 
 }
