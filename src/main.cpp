@@ -21,7 +21,7 @@ void getLight(){
   HTTPClient http;  
   String serverPath_light = endpoint + "light";
   http.begin(serverPath_light); 
-  http.addHeader("Content-Type", "application/json"); 
+  http.addHeader("api-key", api_key); 
   String RequestBody;  
   
   int httpResponseCode = http.GET();
@@ -59,7 +59,8 @@ void patchTemp(float temperature){
   HTTPClient http;  
   String serverPath_temp = endpoint + "temp";
   http.begin(serverPath_temp); 
-  http.addHeader("Content-Type", "application/json"); 
+  http.addHeader("Content-Type", "application/json");  
+   http.addHeader("api-key", api_key); 
   String RequestBody;  
 
   JsonDocument doc;  
